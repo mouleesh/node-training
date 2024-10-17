@@ -26,7 +26,7 @@ rou.get("/api/file-system", (req, res) => {
     
     console.log(data.toString());
 
-    fs.renameSync("sample.txt", "example.txt")
+    fs.renameSync("sample.txt", "example.txt");
     
 })
 
