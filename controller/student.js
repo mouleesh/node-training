@@ -1,15 +1,31 @@
 import { Router } from "express";
+import jwt from "jsonwebtoken";
 
 const router = Router();
 
+const authenticate = (req, res, next) => {
+    const token = req.headers.token
+  
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+  
+    try {
+      const decoded = jwt.verify(token, "Avisit");
+    //   req.username = decoded.username;
+      next();
+    } catch (err) {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+};
+
+router.use(authenticate)
 
 router.get('/api/student', (req, res) => {
-    if(req.headers.token === "ajysdghbfaksjb"){
-        const students = ["Abilash", "Prasad", "Gopinath"];
-        res.send(students)
-    } else {
-        res.status(401).send("Unauthorized User")
-    }
+
+    const students = ["Abilash", "Prasad", "Gopinath"];
+    res.send(students)
+    
 })
 
 router.get('/api/employee', (req, res, next) => {

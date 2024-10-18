@@ -38,10 +38,10 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
     res.send(req.file)
 })
 
+app.use(userRoutes);
 app.use(studentRoutes);
 app.use(eventsRoutes);
 app.use(fileSystemRoutes);
-app.use(userRoutes);
 
 
 app.listen(PORT, () => {
