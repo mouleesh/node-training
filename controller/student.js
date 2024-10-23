@@ -1,5 +1,6 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
+import studentModel from "../model/student.js";
 
 const router = Router();
 
@@ -19,9 +20,15 @@ const authenticate = (req, res, next) => {
     }
 };
 
-router.use(authenticate)
+// router.use(authenticate)
 
-router.get('/api/student', (req, res) => {
+router.get('/api/student', async (req, res) => {
+
+    const studs = await studentModel.find({city: "Hyderabad"});
+    console.log(studs);
+
+    // const stud = new studentModel({name: "praveen"});
+    // stud.save();
 
     const students = ["Abilash", "Prasad", "Gopinath"];
     res.send(students)

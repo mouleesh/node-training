@@ -6,6 +6,7 @@ import eventsRoutes from './controller/events.js';
 import fileSystemRoutes from './controller/filesystem.js';
 import userRoutes from './controller/user.js';
 import multer from 'multer';
+import connectDB from './db.js';
 
 const app = express();
 const PORT  = 3008;
@@ -13,6 +14,8 @@ const PORT  = 3008;
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json())
 app.use(cors());
+
+connectDB();
 
 app.get('/api', (req, res, next) => {
     console.log("This is from middleware");
