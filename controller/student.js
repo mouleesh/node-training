@@ -24,15 +24,52 @@ const authenticate = (req, res, next) => {
 
 router.get('/api/student', async (req, res) => {
 
-    const studs = await studentModel.find({city: "Hyderabad"});
-    console.log(studs);
+    const studs = await studentModel.find({});
 
-    // const stud = new studentModel({name: "praveen"});
-    // stud.save();
-
-    const students = ["Abilash", "Prasad", "Gopinath"];
-    res.send(students)
+    res.send(studs)
     
+})
+
+router.get('/api/student/legal', async (req, res) => {
+
+  const studs = await studentModel.find(
+    {
+      age: {
+      $gt: 21,
+      $lt: 71
+    },
+    city: "Chennai"
+  });
+
+  res.send(studs)
+  
+})
+
+router.get('/api/student/average-age', async (req, res) => {
+
+  // const studs = await studentModel.find({});
+
+  // const totalAge = studs.reduce((acc, stud) => {
+  //   acc = acc + stud.age;
+  //   return acc;
+  // }, 0)
+
+  // const averageAge = Math.round(totalAge/studs.length);
+
+  const studAggre = studentModel.aggregate([
+    {
+      $match: { city: "Hyderabad" }
+    },
+    {
+      $group: { _id: null, averageAge: { $avg: "$age" } }
+    }
+  ])
+  const studs = await studAggre.exec()
+  console.log(studs);
+
+  // res.status(200).send({averageAge: averageAge})
+  res.send({averageAge: studs[0].averageAge})
+  
 })
 
 router.get('/api/employee', (req, res, next) => {
@@ -43,13 +80,23 @@ router.get('/api/employee', (req, res, next) => {
     res.send("Hello Employee");
 })
 
-router.post('/api/student/:id', (req, res) => {
+router.post('/api/student', (req, res) => {
     try {
-        console.log(req.body);
-        console.log(req.params.id);
-    
+        
+        const {name, age, isMarried, city} = req.body;
+
+        const createdStudent = new studentModel({
+          name,
+          age,
+          is_married: isMarried,
+          city,
+          created_at: new Date()
+        });
+
+        createdStudent.save();
+
         res.status(201).send({
-            data: [],
+            data: createdStudent,
             message: "User received  successfully"
         });
     } catch {
